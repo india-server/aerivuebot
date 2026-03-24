@@ -456,7 +456,7 @@ async def main_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text(
             "*Welcome to MultiBot Platform*\n\n"
-            "Create your own Telegram bot for free!\n\n"
+            "Create your own Telegram Permotion Bot for free!\n\n"
             "How to get started:\n"
             "1. Create a bot via @BotFather\n"
             "2. Send: /addbot YOUR_BOT_TOKEN\n"
