@@ -460,7 +460,8 @@ async def main_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "How to get started:\n"
             "1. Create a bot via @BotFather\n"
             "2. Send: /addbot YOUR_BOT_TOKEN\n"
-            "3. Your bot is live instantly!\n\n"
+            "3. Your bot is live instantly!\n"
+            "4. See Your All Bots /listbots\n\n"
             "_Powered by @aerivue_",
             parse_mode="Markdown"
         )
