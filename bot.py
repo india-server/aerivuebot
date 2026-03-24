@@ -226,7 +226,7 @@ def setup_child_bot(app: Application, uname: str, owner_id: int):
                 "/removeadmin uid - Remove admin\n"
                 "/admins - List admins\n"
                 "/stats - Statistics\n\n"
-                "_Powered by @aerivue_",
+                "_Powered by @aerivuebot_",
                 parse_mode="Markdown"
             )
         elif await cb_is_admin(uname, uid):
@@ -239,7 +239,7 @@ def setup_child_bot(app: Application, uname: str, owner_id: int):
                 "/setmsg text - Set force message\n"
                 "/setimage url - Set force image\n"
                 "/stats - Statistics\n\n"
-                "_Powered by @aerivue_",
+                "_Powered by @aerivuebot_",
                 parse_mode="Markdown"
             )
         else:
@@ -371,7 +371,7 @@ def setup_child_bot(app: Application, uname: str, owner_id: int):
         await update.message.reply_text(
             f"*Bot Stats*\n\n"
             f"Channels: {ch}\nUsers: {us}\nAdmins: {ad}\nBroadcasts: {br}\n"
-            f"Status: Online\n\n_Powered by @aerivue_",
+            f"Status: Online\n\n_Powered by @aerivuebot_",
             parse_mode="Markdown"
         )
 
@@ -440,7 +440,7 @@ async def main_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "/removeadmin uid - Remove main admin\n"
             "/admins - List main admins\n"
             "/stats - System stats\n\n"
-            "_Powered by @aerivue_",
+            "_Powered by @aerivuebot_",
             parse_mode="Markdown"
         )
     elif role == "admin":
@@ -450,7 +450,7 @@ async def main_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "/listbots - List all bots\n"
             "/systembroadcast msg - Broadcast to ALL users\n"
             "/stats - System stats\n\n"
-            "_Powered by @aerivue_",
+            "_Powered by @aerivuebot_",
             parse_mode="Markdown"
         )
     else:
@@ -489,7 +489,7 @@ async def main_owner(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"*You are now SYSTEM OWNER!*\n\n"
         f"Use /start to see all commands.\n\n"
-        f"_Powered by @aerivue_",
+        f"_Powered by @aerivuebot_",
         parse_mode="Markdown"
     )
 
@@ -551,7 +551,7 @@ async def main_addbot(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"Name: {bot_name}\n\n"
             f"Your bot is now LIVE!\n"
             f"Go to @{bot_uname} and use /start\n\n"
-            f"_Powered by @aerivue_",
+            f"_Powered by @aerivuebot_",
             parse_mode="Markdown"
         )
 
@@ -588,7 +588,7 @@ async def main_listbots(update: Update, context: ContextTypes.DEFAULT_TYPE):
         for b in bots:
             status = "Online" if b["token"] in running_bots else "Offline"
             msg += f"@{b['username']} - {b['name']} [{status}]\n"
-        await update.message.reply_text(msg + "\n_Powered by @aerivue_", parse_mode="Markdown")
+        await update.message.reply_text(msg + "\n_Powered by @aerivuebot_", parse_mode="Markdown")
         return
 
     bots = await get_all_child_bots()
@@ -606,7 +606,7 @@ async def main_listbots(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"   Owner: `{b['owner_id']}`\n"
             f"   Users: {users_count}\n\n"
         )
-    await update.message.reply_text(msg + "_Powered by @aerivue_", parse_mode="Markdown")
+    await update.message.reply_text(msg + "_Powered by @aerivuebot_", parse_mode="Markdown")
 
 async def main_sysbroadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await is_main_admin(update.effective_user.id):
@@ -634,7 +634,7 @@ async def main_sysbroadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 total_fail += 1
 
     await update.message.reply_text(
-        f"System Broadcast Done!\n\nSent: {total_ok}\nFailed: {total_fail}\n\n_Powered by @aerivue_",
+        f"System Broadcast Done!\n\nSent: {total_ok}\nFailed: {total_fail}\n\n_Powered by @aerivuebot_",
         parse_mode="Markdown"
     )
 
@@ -672,7 +672,7 @@ async def main_admins(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for a in admins:
         uname = f"@{a['username']}" if a.get("username") else ""
         msg += f"- `{a['user_id']}` {uname} - {a['role'].upper()}\n"
-    await update.message.reply_text(msg + "\n_Powered by @aerivue_", parse_mode="Markdown")
+    await update.message.reply_text(msg + "\n_Powered by @aerivuebot_", parse_mode="Markdown")
 
 async def main_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await is_main_admin(update.effective_user.id):
@@ -693,7 +693,7 @@ async def main_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"Main Users: {total_users}\n"
         f"Total Bot Users: {total_bot_users}\n"
         f"Status: Online\n\n"
-        f"_Powered by @aerivue_",
+        f"_Powered by @aerivuebot_",
         parse_mode="Markdown"
     )
 
