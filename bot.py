@@ -577,37 +577,90 @@ async def main_removebot(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Bot @{uname} removed and stopped!")
 
 async def main_listbots(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not await is_main_admin(update.effective_user.id):
-        # Show user their own bots
+    try:
         uid = update.effective_user.id
-        bots = await child_bots.find({"owner_id": uid, "active": True}).to_list(None)
-        if not bots:
-            await update.message.reply_text("You have no bots.\n\nUse /addbot token to create one!")
+
+        # Normal users -> only their bots
+        if not await is_main_admin(uid):
+            bots = await child_bots.find(
+                {"owner_id": uid, "active": True}
+            ).to_list(None)
+
+            if not bots:
+                await update.message.reply_text(
+                    "You have no bots.\n\nUse /addbot <token> to create one!"
+                )
+                return
+
+            msg = "Your Bots:\n\n"
+
+            for b in bots:
+                status = (
+                    "Online"
+                    if b.get("token") in running_bots
+                    else "Offline"
+                )
+
+                msg += (
+                    f"@{b.get('username', 'UNKNOWN')} "
+                    f"- {b.get('name', 'UNKNOWN')} "
+                    f"[{status}]\n"
+                )
+
+            msg += "\nPowered by @aerivuebot"
+
+            await update.message.reply_text(msg)
             return
-        msg = "*Your Bots:*\n\n"
+
+        # Admin / Owner -> all bots
+        bots = await get_all_child_bots()
+
+        if not bots:
+            await update.message.reply_text("No bots created yet.")
+            return
+
+        msg = "All Bots:\n\n"
+
         for b in bots:
-            status = "Online" if b["token"] in running_bots else "Offline"
-            msg += f"@{b['username']} - {b['name']} [{status}]\n"
-        await update.message.reply_text(msg + "\n_Powered by @aerivuebot_", parse_mode="Markdown")
-        return
+            try:
+                username = b.get("username", "UNKNOWN")
+                token = b.get("token")
+                name = b.get("name", "UNKNOWN")
+                owner_id = b.get("owner_id", "UNKNOWN")
 
-    bots = await get_all_child_bots()
-    if not bots:
-        await update.message.reply_text("No bots created yet.")
-        return
+                status = (
+                    "Online"
+                    if token in running_bots
+                    else "Offline"
+                )
 
-    msg = "*All Bots:*\n\n"
-    for b in bots:
-        status = "Online" if b["token"] in running_bots else "Offline"
-        users_count = await bot_col(b["username"], "users").count_documents({})
-        msg += (
-            f"@{b['username']} [{status}]\n"
-            f"   Name: {b['name']}\n"
-            f"   Owner: `{b['owner_id']}`\n"
-            f"   Users: {users_count}\n\n"
+                users_count = 0
+
+                if username != "UNKNOWN":
+                    users_count = await bot_col(
+                        username, "users"
+                    ).count_documents({})
+
+                msg += (
+                    f"@{username} [{status}]\n"
+                    f"Name: {name}\n"
+                    f"Owner: {owner_id}\n"
+                    f"Users: {users_count}\n\n"
+                )
+
+            except Exception as e:
+                print(f"BOT ERROR: {e}")
+                continue
+
+        msg += "Powered by @aerivuebot"
+
+        await update.message.reply_text(msg)
+
+    except Exception as e:
+        print(f"LISTBOTS ERROR: {e}")
+        await update.message.reply_text(
+            f"Error while loading bots:\n{str(e)}"
         )
-    await update.message.reply_text(msg + "_Powered by @aerivuebot_", parse_mode="Markdown")
-
 async def main_sysbroadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await is_main_admin(update.effective_user.id):
         return
